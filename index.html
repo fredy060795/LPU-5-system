@@ -9445,253 +9445,7 @@ td input.notes:focus { border-color: var(--accent); outline: none; }
         </div>
     </div>
 
-    <!-- ================================================================ -->
-    <!-- SERVER-FÖDERATION VERWALTUNG                                      -->
-    <!-- ================================================================ -->
-    <div hidden>
-    <hr class="fed-divider">
-    <div class="fed-section-title">
-        <i class="fas fa-shield-alt"></i>Server-Föderation
-    </div>
 
-    <!-- Eigener Server – QR-Onboarding -->
-    <div class="section">
-        <div class="section-header">
-            <i class="fas fa-qrcode"></i>
-            Eigener Server – QR-Onboarding
-        </div>
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            Zeigt den QR-Code dieses Servers an. Andere LPU5-Server können diesen Code scannen
-            oder importieren, um diesen Server in ihrer Föderations-Registry zu registrieren.
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="display:block;margin-bottom:4px;font-size:0.85rem;color:var(--text-dim);">
-                <i class="fas fa-globe"></i> Öffentliche Server-URL (für andere Server erreichbar):
-            </label>
-            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-                <input type="text" id="fedOwnUrlInput"
-                       placeholder="https://mein-server.example.com:8101"
-                       style="flex:1;min-width:220px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-input,#1a1a2e);color:var(--text-main,#eee);font-size:0.9rem;">
-                <button class="btn btn-success btn-sm" onclick="fedSaveOwnUrl()">
-                    <i class="fas fa-save"></i> URL speichern
-                </button>
-            </div>
-            <div id="fedOwnUrlStatus" style="margin-top:4px;font-size:0.82rem;"></div>
-        </div>
-        <div style="margin-bottom:12px;">
-            <button class="btn btn-primary" onclick="fedLoadOwnQR()">
-                <i class="fas fa-qrcode"></i> QR-Code laden
-            </button>
-            <button class="btn" onclick="fedCopyServerInfo()" style="margin-left:8px;">
-                <i class="fas fa-copy"></i> Info kopieren
-            </button>
-        </div>
-        <div id="fedOwnQrSection" class="fed-hidden">
-            <div class="fed-qr-container">
-                <img id="fedOwnQrImg" class="fed-qr-img" alt="Eigener Server QR-Code">
-                <div class="fed-info-grid">
-                    <div class="network-info-item">
-                        <span class="network-info-label">Server-ID:</span>
-                        <span class="network-info-value" id="fedOwnServerId" style="font-size:0.8rem;word-break:break-all;">–</span>
-                    </div>
-                    <div class="network-info-item">
-                        <span class="network-info-label">Fingerprint:</span>
-                        <span class="network-info-value" id="fedOwnFingerprint" style="font-size:0.78rem;word-break:break-all;">–</span>
-                    </div>
-                    <div class="network-info-item">
-                        <span class="network-info-label">Name:</span>
-                        <span class="network-info-value" id="fedOwnName">–</span>
-                    </div>
-                    <div class="network-info-item">
-                        <span class="network-info-label">URL:</span>
-                        <span class="network-info-value" id="fedOwnUrl" style="word-break:break-all;">–</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="fedOwnQrStatus" style="margin-top:8px;"></div>
-    </div>
-
-    <!-- Server importieren via QR-Code oder JSON -->
-    <div class="section">
-        <div class="section-header">
-            <i class="fas fa-file-import"></i>
-            Server importieren (QR-Code-Upload / JSON)
-        </div>
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            Importiert einen anderen LPU5-Server. Lade dazu dessen QR-Code-Bilddatei hoch
-            oder füge die JSON-Server-Info direkt ein.
-        </div>
-        <div class="grid-2">
-            <div>
-                <div class="form-group">
-                    <label class="form-label">QR-Code-Bilddatei hochladen</label>
-                    <input type="file" id="fedQrFileInput" accept="image/*" class="form-input"
-                           style="padding:6px;" onchange="fedDecodeQrFile(this)">
-                </div>
-                <div class="form-group">
-                    <div id="fedQrCanvas" style="display:none;">
-                        <canvas id="fedQrHiddenCanvas" style="display:none;"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="form-group">
-                    <label class="form-label">JSON direkt einfügen (alternativ)</label>
-                    <textarea id="fedImportJson" class="form-input"
-                              style="height:100px;resize:vertical;font-size:0.8rem;"
-                              placeholder='{"server_id":"...","name":"...","public_key":"-----BEGIN PUBLIC KEY-----\n..."}'></textarea>
-                </div>
-            </div>
-        </div>
-        <div id="fedImportPreview" class="fed-hidden" style="margin-bottom:12px;">
-            <div class="success-box">
-                <i class="fas fa-check-circle"></i>
-                <strong>Erkannte Server-Info:</strong>
-                <span id="fedImportPreviewText"></span>
-            </div>
-        </div>
-        <div class="button-group" style="margin-top:0;">
-            <button class="btn btn-success" onclick="fedImportServer()">
-                <i class="fas fa-plus-circle"></i> Server hinzufügen
-            </button>
-            <button class="btn" onclick="fedClearImport()">
-                <i class="fas fa-times"></i> Zurücksetzen
-            </button>
-        </div>
-        <div id="fedImportStatus" style="margin-top:8px;"></div>
-    </div>
-
-    <!-- Registrierte Föderations-Server -->
-    <div class="section">
-        <div class="section-header">
-            <i class="fas fa-server"></i>
-            Registrierte Föderations-Server
-            <button class="btn btn-sm" onclick="fedLoadServers()" style="float:right;margin-top:-4px;">
-                <i class="fas fa-sync"></i> Aktualisieren
-            </button>
-        </div>
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            Alle bekannten Föderations-Server. Nur <strong>vertrauenswürdige</strong> Server
-            erhalten signierte Daten bei der Synchronisierung.
-        </div>
-        <div id="fedServerListArea">
-            <div style="color:var(--text-dim);font-size:0.9rem;">
-                <i class="fas fa-spinner fa-spin"></i> Lade Server-Liste …
-            </div>
-        </div>
-    </div>
-
-    <!-- Handshake-Assistent (erscheint, wenn ein Handshake gestartet wird) -->
-    <div class="section fed-hidden" id="fedHandshakeSection">
-        <div class="section-header">
-            <i class="fas fa-handshake"></i>
-            Handshake-Assistent –
-            <span id="fedHsTargetName" style="color:var(--accent-blue);"></span>
-        </div>
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            Der Handshake besteht aus drei Schritten: Challenge ausstellen, signieren lassen und
-            verifizieren. Danach ist der Server als <strong>vertrauenswürdig</strong> markiert.
-        </div>
-
-        <!-- Schritt 1: Challenge ausstellen -->
-        <div class="fed-step">
-            <div class="fed-step-num">1</div>
-            <div class="fed-step-body">
-                <div class="fed-step-label">Challenge ausstellen</div>
-                <button class="btn btn-primary" id="fedHsIssueBtn" onclick="fedHsIssueChallenge()">
-                    <i class="fas fa-bolt"></i> Challenge generieren
-                </button>
-                <div id="fedHsChallengeBox" class="fed-hidden" style="margin-top:10px;">
-                    <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:4px;">
-                        Challenge-Bytes (Base64) – auf den Gegner-Server übertragen:
-                    </div>
-                    <div class="fed-mono" id="fedHsChallengeText"></div>
-                    <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;">
-                        <button class="btn btn-sm" onclick="fedHsCopyChallenge()">
-                            <i class="fas fa-copy"></i> Kopieren
-                        </button>
-                        <button class="btn btn-sm btn-primary" id="fedHsAutoSignBtn"
-                                onclick="fedHsAutoSign()" style="display:none;">
-                            <i class="fas fa-robot"></i> Automatisch signieren (Peer erreichbar)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schritt 2: Signatur eintragen -->
-        <div class="fed-step">
-            <div class="fed-step-num">2</div>
-            <div class="fed-step-body">
-                <div class="fed-step-label">Signatur vom Gegner-Server eintragen</div>
-                <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:6px;">
-                    Sende die Challenge zum Gegner-Server (<code>/api/federation/handshake/respond</code>)
-                    und füge die zurückgegebene Signatur hier ein.
-                </div>
-                <textarea id="fedHsSignatureInput" class="form-input"
-                          style="height:80px;resize:vertical;font-size:0.8rem;"
-                          placeholder="Base64-Signatur vom Gegner-Server hier einfügen …"></textarea>
-            </div>
-        </div>
-
-        <!-- Schritt 3: Verifizieren -->
-        <div class="fed-step">
-            <div class="fed-step-num">3</div>
-            <div class="fed-step-body">
-                <div class="fed-step-label">Signatur verifizieren → Server als vertrauenswürdig markieren</div>
-                <button class="btn btn-success" onclick="fedHsVerify()">
-                    <i class="fas fa-check-circle"></i> Verifizieren & vertrauen
-                </button>
-            </div>
-        </div>
-
-        <div id="fedHsStatus" style="margin-top:8px;"></div>
-        <div style="margin-top:12px;">
-            <button class="btn" onclick="fedHsClose()">
-                <i class="fas fa-times"></i> Assistent schließen
-            </button>
-        </div>
-    </div>
-
-    <!-- Daten-Synchronisierung -->
-    <div class="section">
-        <div class="section-header">
-            <i class="fas fa-sync-alt"></i>
-            Daten-Synchronisierung
-        </div>
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            Sendet signierte lokale Karten-Marker an alle <strong>vertrauenswürdigen</strong>
-            Föderations-Server. Nicht vertrauenswürdige Server werden übersprungen.
-        </div>
-
-        <!-- Auto-Sync Status -->
-        <div id="fedAutoSyncSection" style="margin-bottom:12px; padding:10px; background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.25); border-radius:6px;">
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-                <i class="fas fa-robot" style="color:var(--accent);"></i>
-                <strong>Automatische Synchronisierung</strong>
-                <span id="fedAutoSyncBadge" style="font-size:0.8em; padding:2px 8px; border-radius:10px; background:#555; color:#fff;">…</span>
-            </div>
-            <div id="fedAutoSyncInfo" style="font-size:0.9em; color:var(--text-dim);">Lade Status …</div>
-        </div>
-
-        <div class="button-group" style="margin-top:0;">
-            <button class="btn btn-primary" onclick="fedRunSync()">
-                <i class="fas fa-paper-plane"></i> Manuelle Sync starten
-            </button>
-            <button class="btn" onclick="fedLoadAutoSyncStatus()">
-                <i class="fas fa-sync"></i> Status aktualisieren
-            </button>
-        </div>
-        <div id="fedSyncStatus" style="margin-top:10px;"></div>
-    </div>
-
-</div>
 </div>
     </section>
     <!-- Ende network.html -->
@@ -21388,7 +21142,7 @@ async function fedSaveOwnUrl() {
 }
 
 // Load saved URL on page load
-fedLoadOwnUrl();
+if (document.getElementById('fedOwnUrlInput')) fedLoadOwnUrl();
 
 async function fedLoadOwnQR() {
     const token = _getAuthToken();
@@ -21973,9 +21727,11 @@ loadServerInfo();
 loadNetworkSettings();
 refreshCotListenerStatus();
 loadJoinQR();
-fedLoadServers();
-fedLoadOwnQR();
-fedLoadAutoSyncStatus();
+if (document.getElementById('fedOwnUrlInput')) {
+    fedLoadServers();
+    fedLoadOwnQR();
+    fedLoadAutoSyncStatus();
+}
     };
     </script>
     <!-- Ende JS network.html -->
