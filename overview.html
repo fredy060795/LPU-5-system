@@ -765,6 +765,8 @@
     .team-member-list { margin-top:8px; }
     .team-member-item { display:flex; align-items:center; gap:8px; padding:6px 10px; background:#111; border:1px solid #2a2a2a; border-radius:4px; margin-bottom:4px; font-size:0.85em; color:#ccc; }
     .team-member-item i { color:#2ecc71; }
+    .team-warning-box { margin-bottom:12px; padding:10px; background:rgba(243,156,18,0.12); border:1px solid rgba(243,156,18,0.35); border-radius:6px; color:#ccc; font-size:0.82em; }
+    .team-warning-box i { color:#f39c12; }
 
     /* ── Top Status Bar ── */
     #top-status-bar {
@@ -7045,8 +7047,8 @@
         h += '<div style="color:#888;font-size:0.85em;">Kein Team aktiv</div>';
         h += '</div>';
 
-        h += '<div style="margin-bottom:12px;padding:10px;background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.35);border-radius:6px;color:#ccc;font-size:0.82em;">';
-        h += '<i class="fas fa-info-circle" style="color:#f39c12;"></i> ';
+        h += '<div class="team-warning-box">';
+        h += '<i class="fas fa-info-circle"></i> ';
         h += 'Die Team-Erstellung in der Übersicht wurde entfernt. Nutze den Bereich <b>Netzwerk</b>, um eine Server-Verbindung per QR-Code hinzuzufügen.';
         h += '</div>';
 
