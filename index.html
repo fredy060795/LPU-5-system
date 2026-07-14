@@ -2676,6 +2676,7 @@
       cursor: pointer;
       user-select: none;
       transition: border-color 0.2s;
+      touch-action: none;
     }
     #mapCompass:hover { border-color: #007bff; }
     #mapCompass.active { border-color: #ffd700; background: rgba(40,30,0,0.9); }
@@ -2688,10 +2689,70 @@
       left: calc(var(--sb-collapsed) + 10px);
       top: 268px;
       z-index: 999; /* below sidebar (1000) so sidebar covers it when expanded */
-      color: #bbb;
+      color: #9ad1ff;
       font-size: 8px;
+      font-weight: bold;
       text-align: center;
       width: 36px;
+      pointer-events: none;
+      letter-spacing: 0.3px;
+    }
+    /* ── Bearing Slider (Karten-Grad-Winkel) ──────── */
+    #bearingSliderWrap {
+      position: fixed;
+      left: calc(var(--sb-collapsed) + 4px);
+      top: 284px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      pointer-events: none;
+    }
+    #bearingSliderContainer {
+      position: relative;
+      width: 48px;
+      height: 18px;
+      pointer-events: all;
+      cursor: ew-resize;
+      touch-action: none;
+      background: rgba(20,20,20,0.7);
+      border: 1px solid #444;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #bearingSlider {
+      position: absolute;
+      left: 0; right: 0; top: 0; bottom: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      margin: 0;
+      pointer-events: none;
+      touch-action: none;
+    }
+    #bearingTrackFill {
+      position: absolute;
+      left: 0; top: 0; height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(0,123,255,0.35), rgba(0,123,255,0.15));
+      pointer-events: none;
+    }
+    #bearingThumb {
+      position: absolute;
+      top: 50%;
+      width: 8px;
+      height: 14px;
+      border-radius: 2px;
+      background: #007bff;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 4px rgba(0,0,0,0.45);
+      pointer-events: none;
+    }
+    #bearingDegLabel {
+      color: #9ad1ff;
+      font-size: 9px;
+      font-weight: bold;
       pointer-events: none;
       letter-spacing: 0.3px;
     }
@@ -8146,7 +8207,7 @@ td input.notes:focus { border-color: var(--accent); outline: none; }
   </div>
 
   <!-- Compass -->
-  <div id="mapCompass" title="Kompass · Klick = Nord zurücksetzen">
+  <div id="mapCompass" title="Kompass – Klick = Nord – Vertikal ziehen = Neigung – Horizontal ziehen = Drehung">
     <svg id="compassNeedle" viewBox="0 0 24 24" width="22" height="22">
       <g id="compassNeedleGroup">
         <path d="M12 2 L14 11 L12 13 L10 11 Z" fill="#e74c3c"/>
@@ -8155,7 +8216,16 @@ td input.notes:focus { border-color: var(--accent); outline: none; }
       </g>
     </svg>
   </div>
-  <div id="compassDegText">N</div>
+  <div id="compassDegText">0°</div>
+
+  <div id="bearingSliderWrap">
+    <div id="bearingSliderContainer" title="Karte drehen (0°–359°) – Ziehen zum Drehen">
+      <div id="bearingTrackFill"></div>
+      <input type="range" id="bearingSlider" min="0" max="359" value="0" step="1" />
+      <div id="bearingThumb" style="left:0%;"></div>
+    </div>
+    <div id="bearingDegLabel">0°</div>
+  </div>
 
   <div id="iconBar" aria-hidden="false">
     <!-- Existing buttons WITHOUT duplicate life status icons -->
@@ -14407,7 +14477,8 @@ window.addEventListener('storage', (e) => {
       function ensureMapVisible() {
         try { _mlMap.resize(); } catch (e) { console.warn('resize', e); }
       }
-      ensureMapVisible();
+      _mlMap.once('load', () => { ensureMapVisible(); setTimeout(ensureMapVisible, 200); });
+      window.addEventListener('resize', () => setTimeout(ensureMapVisible, 120));
       setTimeout(ensureMapVisible, 80);
       setTimeout(ensureMapVisible, 300);
       setTimeout(ensureMapVisible, 800);
