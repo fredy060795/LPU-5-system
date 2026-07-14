@@ -7045,13 +7045,10 @@
         h += '<div style="color:#888;font-size:0.85em;">Kein Team aktiv</div>';
         h += '</div>';
 
-        // CREATE TEAM
-        h += '<div style="font-size:0.8em;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Neues Team erstellen</div>';
-        h += '<input type="text" id="team-create-name" placeholder="Team Name eingeben" class="nw-input" maxlength="40">';
-        h += '<button class="menu-btn" style="background:rgba(46,204,113,0.2);border-color:#2ecc71;color:#2ecc71;font-weight:bold;justify-content:center;" onclick="event.stopPropagation();_teamCreate()">';
-        h += '<i class="fas fa-plus-circle"></i> CREATE TEAM</button>';
-
-        h += '<div style="margin:16px 0;border-top:1px solid #333;"></div>';
+        h += '<div style="margin-bottom:12px;padding:10px;background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.35);border-radius:6px;color:#ccc;font-size:0.82em;">';
+        h += '<i class="fas fa-info-circle" style="color:#f39c12;"></i> ';
+        h += 'Die Team-Erstellung in der Übersicht wurde entfernt. Nutze den Bereich <b style="color:#ccc;">Netzwerk</b>, um eine Server-Verbindung per QR-Code hinzuzufügen.';
+        h += '</div>';
 
         // JOIN hint – use existing Netzwerk QR scanner
         h += '<div style="font-size:0.8em;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Team beitreten</div>';
